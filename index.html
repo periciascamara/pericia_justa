@@ -1,17 +1,970 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Pericia Justa - KriterIO | Avaliações Periciais Inteligentes</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom Styles & Animation Overrides */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Hero Animation Styles */
+        .hero-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Container da área interativa */
+        .interactive-area {
+            position: relative;
+            width: 100%;
+            height: 500px; /* Altura fixa para a área das tags */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .center-image {
+            z-index: 10;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.05);
+            animation: pulse-slow 3s infinite;
+        }
+
+        .floating-tag {
+            position: absolute;
+            background: rgba(34, 197, 94, 0.2); /* Verde Inicial (Transparente) */
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            color: #86efac; /* Texto Verde Claro */
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.5s ease-in-out; /* Suavidade na mudança de posição */
+            user-select: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 20;
+        }
+
+        .floating-tag:hover {
+            transform: scale(1.1);
+            background: rgba(34, 197, 94, 0.4);
+            z-index: 30;
+        }
+
+        /* Estado "Ativado" (Vermelho) */
+        .floating-tag.active {
+            background: #ef4444; /* Vermelho Sólido */
+            border-color: #b91c1c;
+            color: white;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+            animation: shake 0.5s;
+            z-index: 25;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); } /* Reduzido para não conflitar com a transição de posição */
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Accordion Styles */
+        .accordion-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+    </style>
 </head>
-<body>
-    <div class="background">
-        <div class="content">
-            <h1>Welcome to Pericia Justa</h1>
-            <p>Content goes here...</p>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center text-yellow-500 font-bold text-xl">K</div>
+                    <div>
+                        <span class="text-xl font-bold text-slate-900 tracking-tight">KriterIO</span>
+                        <span class="block text-xs text-slate-500 uppercase tracking-widest">Pericia Justa</span>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#funcionalidades" class="text-slate-600 hover:text-blue-900 font-medium transition">Funcionalidades</a>
+                    <a href="#direitos" class="text-slate-600 hover:text-blue-900 font-medium transition">Direitos</a>
+                    <a href="#calculadoras" class="text-slate-600 hover:text-blue-900 font-medium transition">Calculadoras</a>
+                    <a href="#planos" class="text-slate-600 hover:text-blue-900 font-medium transition">Planos</a>
+                </div>
+                <div>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="bg-blue-900 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-lg hover:shadow-blue-900/30">
+                        Começar Agora
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg min-h-screen flex items-center pt-20 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                
+                <!-- Coluna Esquerda: Texto -->
+                <div class="text-left z-20">
+                    <div class="inline-block bg-yellow-500/20 text-yellow-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 border border-yellow-500/30">
+                        🚀 Tecnologia Jurídica Avançada
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                        Validação de Direitos <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200">Simples e Precisa.</span>
+                    </h1>
+                    <p class="text-xl text-slate-300 mb-8 max-w-lg">
+                        A plataforma SaaS que une IA, Medicina e Direito. Clique nas etiquetas para simular a análise.
+                    </p>
+
+                    <!-- Controle de Quantidade de Direitos -->
+                    <div class="mb-8 p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 backdrop-blur-sm max-w-sm">
+                        <label for="tag-count-slider" class="block text-sm text-slate-300 mb-3 flex justify-between items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-yellow-500"></i> Filtrar Direitos</span>
+                            <span class="bg-yellow-500 text-slate-900 font-bold px-2 py-0.5 rounded text-xs" id="tag-count-display">12</span>
+                        </label>
+                        <input type="range" id="tag-count-slider" min="1" max="12" value="12" 
+                               class="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-yellow-500">
+                        <p class="text-xs text-slate-400 mt-2">Arraste para ajustar a complexidade da visualização.</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#direitos" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 px-8 py-4 rounded-lg font-bold text-lg transition shadow-[0_0_20px_rgba(234,179,8,0.4)] text-center">
+                            Verificar Meus Direitos
+                        </a>
+                        <a href="#demo" class="bg-white/10 hover:bg-white/20 backdrop-blur text-white px-8 py-4 rounded-lg font-bold text-lg transition border border-white/20 text-center">
+                            <i class="fa-solid fa-play mr-2"></i> Ver Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Coluna Direita: Visual Interativo -->
+                <div class="relative interactive-area">
+                    <!-- Imagem Central (Ícone abstrato) -->
+                    <div class="center-image">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    
+                    <!-- Container onde as tags serão injetadas -->
+                    <div id="tags-container" class="absolute inset-0 w-full h-full">
+                        <!-- Tags via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="funcionalidades" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Ferramentas de Alta Precisão</h2>
+                <p class="text-lg text-slate-600">Tudo o que você precisa para fundamentar seu processo.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-xl transition group">
+                    <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600 text-2xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Análise Documental por IA</h3>
+                    <p class="text-slate-600">
+                        Upload instantâneo de laudos e receitas. Nossa IA extrai CIDs, datas e prognósticos para estruturar a linha do tempo do caso automaticamente.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-xl transition group">
+                    <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Calculadoras e Instrumentos</h3>
+                    <p class="text-slate-600 mb-4">
+                        Acesso a diversas calculadoras de avaliação pericial e instrumentos padronizados:
+                    </p>
+                    <ul class="text-sm text-slate-500 space-y-2">
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> Ergonomia e Biomecânica</li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> Escala Analógica de Dor (EVA)</li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> Riscos Psicossociais</li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> <strong>Cálculo da CIF (OMS)</strong></li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> <strong>IFBRM (Índice de Funcionalidade BR)</strong></li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> Calculadora de Doença Cardíaca Grave</li>
+                        <li><i class="fa-solid fa-check text-yellow-500 mr-2"></i> Protocolos Clínicos (Foco em Ortopedia)</li>
+                    </ul>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="p-8 rounded-2xl bg-slate-50 border border-slate-100 hover:shadow-xl transition group">
+                    <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 text-2xl mb-6 group-hover:scale-110 transition">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Assessoria Remota (Telemedicina)</h3>
+                    <p class="text-slate-600">
+                        Caso deseje, agende uma assessoria remota feita por telemedicina com peritos associados. O objetivo é instruir e melhorar tecnicamente a sua demanda antes do processo.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rights Section (Accordion) -->
+    <section id="direitos" class="py-24 bg-slate-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <span class="text-yellow-600 font-bold tracking-wider uppercase text-sm">Biblioteca de Direitos</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-4">O que podemos validar para você?</h2>
+                <p class="text-slate-600">Clique nos itens abaixo para entender o contexto pericial de cada benefício.</p>
+            </div>
+
+            <div class="space-y-4">
+                
+                 <!-- NEW ITEM: Registro de Violência Oficial -->
+                 <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+                                <i class="fa-solid fa-hand-holding-hand"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Registro de Violência Oficial / Medida Protetiva</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Notificação compulsória e registro oficial de violência contra a mulher. Fornece embasamento médico-legal fundamental para acesso a medidas protetivas de urgência, direitos trabalhistas (afastamento) e instrução de processos judiciais, garantindo o direito constitucional à vida.</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- NEW ITEM: Doença Cardíaca Grave -->
+                 <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                                <i class="fa-solid fa-heart-pulse"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Avaliação de Doença Cardíaca Grave</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Validação de cardiopatia grave para fins de Isenção de Imposto de Renda e Aposentadoria. Analisamos critérios de fração de ejeção, classe funcional (NYHA) e irreversibilidade do quadro.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW ITEM: Estimativa de Dano Corporal -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-600">
+                                <i class="fa-solid fa-person-walking"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Estimativa de Dano Corporal</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Quantificação do déficit funcional permanente (Dano Corporal Pós-Traumático) para ações indenizatórias (Cível e Trabalhista). Utilizamos tabelas oficiais (SUSEP, DPVAT) e baremos internacionais.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ITEM: Nexo Ocupacional -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-yellow-500">
+                                <i class="fa-solid fa-helmet-safety"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Avaliação de Nexo Ocupacional / Acidentes</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Análise técnica fundamental para estabelecer se a doença ou lesão possui relação direta (causa) ou indireta (concausa) com o trabalho executado, impactando estabilidade e indenizações.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 1 -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                                <i class="fa-solid fa-user-injured"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Auxílio por Incapacidade Temporária (Auxílio-Doença)</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Avalia a impossibilidade temporária de exercer a atividade habitual. O foco é estritamente médico (modelo biomédico) para constatar se a doença gera incapacidade laboral naquele momento.</p>
+                            <div class="flex gap-2 text-sm text-slate-500">
+                                <span class="bg-white px-2 py-1 rounded border">Expectativa de Recuperação</span>
+                                <span class="bg-white px-2 py-1 rounded border">Início da Incapacidade (DII)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+                                <i class="fa-solid fa-wheelchair"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Aposentadoria por Incapacidade Permanente</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Deve comprovar a incapacidade total e permanente para qualquer trabalho, sem previsão de recuperação ou reabilitação profissional. É reconhecida pela Perícia Médica Federal.</p>
+                            <div class="text-xs text-slate-400 mt-2 uppercase font-bold">Fonte: Lei 8.213/91</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+                                <i class="fa-solid fa-crutch"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Auxílio-Acidente</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> A avaliação foca na existência de sequelas definitivas (após consolidação das lesões) que impliquem na redução da capacidade para o trabalho habitual, exigindo maior esforço, mas permitindo o trabalho.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+                                <i class="fa-solid fa-universal-access"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Aposentadoria PCD (LC 142/2013)</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Exige perícia médica e funcional (biopsicossocial) para definir o grau da deficiência (leve, moderada ou grave) e fixar a data de início, utilizando o Índice de Funcionalidade Brasileiro (IFBrA).</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Item 5 -->
+                 <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                                <i class="fa-solid fa-hand-holding-heart"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">BPC / LOAS</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Requer duas avaliações: 1) Perícia Médica (impedimentos de longo prazo) e 2) Avaliação Social (barreiras e vulnerabilidade).</p>
+                        </div>
+                    </div>
+                </div>
+                
+                 <!-- Item 6 -->
+                 <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button class="w-full px-6 py-5 text-left flex justify-between items-center focus:outline-none" onclick="toggleAccordion(this)">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                                <i class="fa-solid fa-sack-dollar"></i>
+                            </div>
+                            <span class="text-lg font-bold text-slate-800">Isenção de Imposto de Renda</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down text-slate-400 accordion-icon"></i>
+                    </button>
+                    <div class="accordion-content bg-slate-50">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100">
+                            <p class="text-slate-700 mb-3"><strong>Contexto da Perícia:</strong> Necessita de laudo oficial comprovando doenças graves específicas (ex: neoplasia, esclerose múltipla, cardiopatia grave), fixando a data de início da moléstia.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Violência Contra a Mulher -->
+    <section class="relative py-24 bg-slate-900 overflow-hidden">
+        <!-- INSTRUÇÃO PARA O DESENVOLVEDOR: Substitua a URL abaixo da imagem padrão pela imagem desejada para o fundo (background) desta seção (fica em overlay com o fundo escuro) -->
+        <div class="absolute inset-0 bg-[url('violenciamulher.jpg')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 bg-pink-500/20 text-pink-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6 border border-pink-500/30">
+                    <i class="fa-solid fa-shield-heart"></i> Causa Social Apoiada
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                    Violência contra a mulher.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-400">Direito à vida.</span>
+                </h2>
+                <p class="text-xl text-slate-300 mb-8 leading-relaxed">
+                    O Pericia Justa apoia ativamente médicos e profissionais de saúde na linha de frente. Facilitamos a realização técnica e ágil da notificação compulsória de violência, resguardando a integridade da vítima e garantindo o registro forense necessário.
+                </p>
+                
+                <div class="bg-slate-800/80 backdrop-blur-md p-6 rounded-xl border border-slate-700 mb-8 shadow-2xl shadow-black/50">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-file-code text-yellow-500"></i> Ferramenta Exclusiva
+                    </h3>
+                    <p class="text-sm text-slate-300 mb-5">
+                        Disponibilizamos um formulário de preenchimento automatizado estruturado em código <strong>LaTeX</strong>. Documentos gerados com padronização impecável para instruir processos administrativos e judiciais (disponível apenas na nossa plataforma).
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="https://drive.google.com/file/d/1tAb4mgMavgGY-Bp0Iz3KW8AtB-wOI975/view?usp=sharing" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white px-6 py-3 rounded-lg font-bold transition flex items-center gap-2 shadow-lg shadow-pink-900/50 inline-flex">
+                            <i class="fa-solid fa-download"></i> Baixar Ficha de Notificação (PDF)
+                        </a>
+                        <a href="https://drive.google.com/file/d/1xEnN6_hPYS1x57haPpJnzOjBZxTg65yr/view?usp=sharing" target="_blank" class="bg-slate-700 hover:bg-slate-600 text-white border border-slate-600 px-6 py-3 rounded-lg font-bold transition flex items-center gap-2 inline-flex">
+                            <i class="fa-solid fa-code"></i> Acessar Código LaTeX
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calculadoras Section -->
+    <section id="calculadoras" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-yellow-500 rounded-full filter blur-[100px] opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                
+                <!-- Text Content -->
+                <div class="md:w-1/2">
+                    <span class="text-yellow-400 font-bold uppercase tracking-widest text-sm mb-2 block">Tecnologia Preditiva</span>
+                    <h2 class="text-4xl font-bold mb-6">Calculadora Kriterio de Direito Social</h2>
+                    <p class="text-slate-300 text-lg mb-6">
+                        Aplicamos IA para fazer um cálculo da sua chance de sucesso em sua demanda judicial. 
+                        <br><br>
+                        <span class="text-sm bg-slate-800 p-2 rounded border border-slate-700 block">
+                            <i class="fa-solid fa-circle-info text-yellow-500 mr-2"></i>
+                            <strong>Nota:</strong> É apenas uma estimativa, não é garantia de resultado. Mas você terá uma ideia de quão forte sua demanda será quando avaliada pelo devido órgão administrativo ou poder judiciário.
+                        </span>
+                    </p>
+                    <p class="text-2xl font-serif text-white italic mt-8 border-l-4 border-yellow-500 pl-4">
+                        "Nós temos a calculadora e você tem seus dados."
+                    </p>
+                </div>
+
+                <!-- Interactive Calculator Component -->
+                <div class="md:w-1/2 w-full bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-2xl relative">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-green-500 to-red-500 rounded-t-xl opacity-50"></div>
+                    
+                    <h3 class="text-xl font-bold mb-6 text-center">Simulador de Força da Demanda</h3>
+
+                    <!-- Display Result Area -->
+                    <div class="mb-8 text-center p-6 rounded-lg transition-colors duration-500 ease-in-out border border-white/10" id="result-card">
+                        <div class="text-sm text-slate-300 uppercase tracking-widest mb-2">Probabilidade Estimada</div>
+                        <div class="text-5xl font-bold mb-2 transition-all duration-300" id="probability-text">0%</div>
+                        <div class="text-lg font-medium" id="status-text">Analise sua chance</div>
+                    </div>
+
+                    <!-- Slider Control -->
+                    <div class="px-2">
+                        <label for="chance-slider" class="block text-sm font-medium text-slate-400 mb-4 flex justify-between">
+                            <span>Baixa (Azul)</span>
+                            <span>Média</span>
+                            <span>Alta (Vermelho)</span>
+                        </label>
+                        <input type="range" id="chance-slider" min="0" max="100" step="20" value="0" 
+                               class="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-yellow-500 hover:accent-yellow-400 transition-all">
+                        
+                        <div class="flex justify-between text-xs text-slate-500 mt-2 font-mono">
+                            <span>0%</span>
+                            <span>20%</span>
+                            <span>40%</span>
+                            <span>60%</span>
+                            <span>80%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 text-center">
+                        <button class="w-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2 group">
+                            <i class="fa-solid fa-lock"></i> Desbloquear Análise Completa
+                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+                        </button>
+                        <p class="text-xs text-slate-500 mt-3">Baseado em milhares de jurisprudências analisadas.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="planos" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Planos Flexíveis</h2>
+                <p class="text-lg text-slate-600">Soluções para indivíduos e grandes escritórios.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6 mb-12">
+                <!-- Plan 1 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition flex flex-col">
+                    <h3 class="text-xl font-bold text-slate-900">Crédito Único</h3>
+                    <p class="text-sm text-slate-500 mt-1">Para quem precisa de uma análise pontual.</p>
+                    <div class="my-6">
+                        <span class="text-3xl font-bold text-slate-900">R$ 49</span>
+                        <span class="text-slate-500">/análise</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1 text-sm text-slate-600">
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> 1 Relatório Simplificado</li>
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> Análise de Documentos</li>
+                    </ul>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="w-full border-2 border-slate-900 text-slate-900 py-2 rounded-lg font-bold hover:bg-slate-900 hover:text-white transition block text-center">Comprar</a>
+                </div>
+
+                <!-- Plan 2 (Popular) -->
+                <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl transform scale-105 z-10 flex flex-col relative">
+                    <div class="absolute top-0 right-0 bg-yellow-500 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg text-slate-900">MAIS VENDIDO</div>
+                    <h3 class="text-xl font-bold">Assinatura Pro</h3>
+                    <p class="text-sm text-slate-400 mt-1">Para Advogados e Médicos Assistentes.</p>
+                    <div class="my-6">
+                        <span class="text-3xl font-bold">R$ 199</span>
+                        <span class="text-slate-400">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1 text-sm text-slate-300">
+                        <li><i class="fa-solid fa-check text-yellow-400 mr-2"></i> 10 Análises/mês</li>
+                        <li><i class="fa-solid fa-check text-yellow-400 mr-2"></i> <strong>Calculadoras Exclusivas</strong> (NeuroLabor, Dor, Ergonomia)</li>
+                        <li><i class="fa-solid fa-check text-yellow-400 mr-2"></i> Suporte Prioritário</li>
+                    </ul>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="w-full bg-yellow-500 text-slate-900 py-2 rounded-lg font-bold hover:bg-yellow-400 transition block text-center">Assinar Agora</a>
+                </div>
+
+                <!-- Plan 3 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition flex flex-col">
+                    <h3 class="text-xl font-bold text-slate-900">Escritórios</h3>
+                    <p class="text-sm text-slate-500 mt-1">Enterprise para bancas jurídicas.</p>
+                    <div class="my-6">
+                        <span class="text-3xl font-bold text-slate-900">R$ 599</span>
+                        <span class="text-slate-500">/mês</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1 text-sm text-slate-600">
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> Até 50 Análises/mês</li>
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> <strong>Acesso a Peritos Judiciais</strong></li>
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> API de Integração</li>
+                    </ul>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="w-full border-2 border-slate-900 text-slate-900 py-2 rounded-lg font-bold hover:bg-slate-900 hover:text-white transition block text-center">Falar com Vendas</a>
+                </div>
+
+                <!-- Plan 4 -->
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-lg transition flex flex-col">
+                    <h3 class="text-xl font-bold text-slate-900">Paciente</h3>
+                    <p class="text-sm text-slate-500 mt-1">Validação prévia do seu caso.</p>
+                    <div class="my-6">
+                        <span class="text-3xl font-bold text-slate-900">R$ 89</span>
+                        <span class="text-slate-500">/único</span>
+                    </div>
+                    <ul class="space-y-3 mb-8 flex-1 text-sm text-slate-600">
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> Parecer Simples</li>
+                        <li><i class="fa-solid fa-check text-blue-600 mr-2"></i> Indicação de Especialista</li>
+                    </ul>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="w-full border-2 border-slate-900 text-slate-900 py-2 rounded-lg font-bold hover:bg-slate-900 hover:text-white transition block text-center">Verificar Caso</a>
+                </div>
+            </div>
+
+            <!-- New: Convênios Institucionais -->
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8">
+                <div class="text-left md:w-2/3">
+                    <div class="inline-block bg-yellow-500 text-slate-900 text-xs font-bold px-2 py-1 rounded mb-3">SETOR PÚBLICO</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Convênios Institucionais</h3>
+                    <p class="text-slate-300">
+                        Soluções sob medida para <strong>Varas da Justiça</strong>, <strong>Órgãos da Administração Pública</strong> e <strong>Procuradorias</strong>.
+                        <br>Automatização de perícias em massa e acesso direto ao painel de analistas.
+                    </p>
+                </div>
+                <div class="md:w-1/3 text-center md:text-right">
+                    <div class="text-xl text-yellow-400 font-bold mb-3">Preço sob Consulta</div>
+                    <a href="https://wa.me/5531999572799?text=Ol%C3%A1%21%20Gostaria%20de%20obter%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20Per%C3%ADcia%20Justa%20e%20como%20posso%20utiliz%C3%A1-lo." target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-6 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 w-full md:w-auto ml-auto inline-flex">
+                        <i class="fa-solid fa-building-columns"></i> Falar com Setor de Convênios
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Depoimentos -->
+    <section class="py-20 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-slate-900 mb-4">Quem usa o Pericia Justa?</h2>
+            <p class="text-slate-600 mb-12">Veja o que profissionais e pacientes dizem sobre nossa tecnologia.</p>
+            
+            <div id="depoimentos-container" class="grid md:grid-cols-2 gap-8">
+                <!-- Depoimentos serão injetados aqui via JS -->
+            </div>
+            
+            <button onclick="refreshTestimonials()" class="mt-10 text-slate-500 hover:text-slate-800 text-sm font-semibold flex items-center justify-center gap-2 mx-auto transition">
+                <i class="fa-solid fa-rotate"></i> Ver mais avaliações
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-4 gap-8">
+            <div class="col-span-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 bg-slate-700 rounded flex items-center justify-center text-yellow-500 font-bold">K</div>
+                    <span class="text-xl font-bold text-white">KriterIO</span>
+                </div>
+                <p class="text-sm max-w-xs">Tecnologia aplicada à justiça social. Facilitando o acesso a direitos através de dados e medicina baseada em evidências.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Produto</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-yellow-400">Calculadoras</a></li>
+                    <li><a href="#" class="hover:text-yellow-400">Preços</a></li>
+                    <li><a href="#" class="hover:text-yellow-400">API</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4">Legal</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-yellow-400">Termos de Uso</a></li>
+                    <li><a href="#" class="hover:text-yellow-400">Privacidade</a></li>
+                    <li><a href="#" class="hover:text-yellow-400">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center text-xs">
+            &copy; 2024 KriterIO Tecnologia Ltda. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Data for Floating Tags
+        const tagsData = [
+            "Auxílio Doença", "Aposentadoria Invalidez", "BPC/LOAS", "Auxílio Acidente",
+            "Isenção de IR", "Autismo (CIPTEA)", "Isenção IPI/IOF", "Vagas em Concursos",
+            "Burnout", "Ler/Dort", "Pensão por Morte", "Salário Maternidade"
+        ];
+
+        const container = document.getElementById('tags-container');
+        const tagCountSlider = document.getElementById('tag-count-slider');
+        const tagCountDisplay = document.getElementById('tag-count-display');
+
+        // Configuração Inicial
+        if(tagCountSlider) {
+            tagCountSlider.max = tagsData.length;
+            tagCountSlider.value = tagsData.length;
+        }
+
+        // Calculate Position based on circular distribution
+        function calculatePosition(index, total, randomOffsetAngle = 0) {
+            const angle = ((index / total) * 2 * Math.PI) + randomOffsetAngle;
+            const radiusX = 40; 
+            const radiusY = 35; 
+            const x = 50 + (radiusX * Math.cos(angle)) - 10; 
+            const y = 50 + (radiusY * Math.sin(angle)) - 5; 
+            const randomX = (Math.random() * 8) - 4;
+            const randomY = (Math.random() * 8) - 4;
+            return { x: x + randomX, y: y + randomY };
+        }
+
+        // Reorganize all visible tags (shuffle positions)
+        function reorganizeAllTags() {
+            const tags = Array.from(document.querySelectorAll('.floating-tag'));
+            const total = tags.length;
+            const randomOffsetAngle = Math.random() * Math.PI * 2; 
+
+            tags.forEach((tag, index) => {
+                const pos = calculatePosition(index, total, randomOffsetAngle);
+                tag.style.left = `${pos.x}%`;
+                tag.style.top = `${pos.y}%`;
+            });
+        }
+
+        // Create a single tag element
+        function createTag(text, index, total) {
+            const tag = document.createElement('div');
+            tag.classList.add('floating-tag', 'pointer-events-auto');
+            tag.innerText = text;
+            tag.innerHTML = `<i class="fa-solid fa-plus mr-2 text-xs opacity-50"></i> ${text}`;
+
+            const pos = calculatePosition(index, total);
+            tag.style.left = `${pos.x}%`;
+            tag.style.top = `${pos.y}%`;
+
+            const duration = 3 + Math.random() * 3;
+            const delay = Math.random() * 2;
+            tag.style.animation = `float ${duration}s ease-in-out infinite ${delay}s`;
+
+            tag.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('active')) {
+                    icon.classList.remove('fa-plus');
+                    icon.classList.add('fa-triangle-exclamation');
+                } else {
+                    icon.classList.remove('fa-triangle-exclamation');
+                    icon.classList.add('fa-plus');
+                }
+                reorganizeAllTags();
+            });
+
+            return tag;
+        }
+
+        function renderTags(count) {
+            if(!container) return;
+            container.innerHTML = '';
+            const slice = tagsData.slice(0, count);
+            slice.forEach((text, index) => {
+                container.appendChild(createTag(text, index, count));
+            });
+        }
+        
+        // Define init function to fix ReferenceError
+        function init() {
+            renderTags(tagsData.length);
+        }
+
+        if(tagCountSlider) {
+            tagCountSlider.addEventListener('input', (e) => {
+                const count = e.target.value;
+                if(tagCountDisplay) tagCountDisplay.innerText = count;
+                renderTags(count);
+            });
+        }
+
+        // Accordion Logic
+        function toggleAccordion(button) {
+            const item = button.parentElement;
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.accordion-item').forEach(acc => {
+                acc.classList.remove('active');
+            });
+            if (!isActive) {
+                item.classList.add('active');
+            }
+        }
+
+        // Calculator Logic
+        const slider = document.getElementById('chance-slider');
+        const probText = document.getElementById('probability-text');
+        const statusText = document.getElementById('status-text');
+        const resultCard = document.getElementById('result-card');
+
+        function updateCalculator(value) {
+            if(!probText) return;
+            probText.innerText = `${value}%`;
+            
+            let bgClass = "";
+            let textLabel = "";
+            let textColor = "";
+
+            if (value <= 20) {
+                bgClass = "bg-blue-900/50";
+                textLabel = "Pouca Chance / Inicial";
+                textColor = "text-blue-400";
+                resultCard.style.boxShadow = "0 0 20px rgba(59, 130, 246, 0.2)";
+            } else if (value == 40) {
+                bgClass = "bg-green-900/50";
+                textLabel = "Chance Razoável";
+                textColor = "text-green-400";
+                resultCard.style.boxShadow = "0 0 20px rgba(34, 197, 94, 0.2)";
+            } else if (value == 60) {
+                bgClass = "bg-yellow-900/50";
+                textLabel = "Chance Moderada";
+                textColor = "text-yellow-400";
+                resultCard.style.boxShadow = "0 0 20px rgba(234, 179, 8, 0.2)";
+            } else { 
+                bgClass = "bg-red-900/50";
+                textLabel = "Alta Probabilidade / Demanda Forte";
+                textColor = "text-red-400";
+                resultCard.style.boxShadow = "0 0 20px rgba(239, 68, 68, 0.3)";
+            }
+
+            resultCard.className = `mb-8 text-center p-6 rounded-lg transition-all duration-500 ease-in-out border border-white/10 ${bgClass}`;
+            statusText.className = `text-lg font-medium ${textColor}`;
+            probText.className = `text-5xl font-bold mb-2 transition-all duration-300 ${textColor}`;
+            statusText.innerText = textLabel;
+        }
+
+        if(slider) {
+            slider.addEventListener('input', (e) => updateCalculator(e.target.value));
+        }
+
+        // --- TESTIMONIALS LOGIC ---
+        const testimonialsData = [
+            {
+                text: "O Score do NeuroLabor mudou a forma como instruímos nossos processos de Burnout. O visual ajuda muito na explicação para o juiz.",
+                author: "Dr. Carlos Mendes",
+                role: "Advogado Trabalhista"
+            },
+            {
+                text: "Uso para triagem dos meus pacientes antes de encaminhar para o INSS. Evita indeferimentos desnecessários.",
+                author: "Dra. Ana Paula",
+                role: "Médica do Trabalho"
+            },
+            {
+                text: "Consegui meu BPC após usar a pré-avaliação do sistema. Me deu segurança para buscar meus direitos.",
+                author: "Maria da Silva",
+                role: "Requerente BPC/LOAS"
+            },
+            {
+                text: "A ferramenta de análise documental por IA economiza horas do meu trabalho de assistente técnico.",
+                author: "Dr. Roberto Campos",
+                role: "Perito Judicial"
+            },
+            {
+                text: "Implementamos na nossa clínica para padronizar os laudos de ergonomia. A qualidade técnica subiu muito.",
+                author: "Clínica SegurMed",
+                role: "Medicina Ocupacional"
+            },
+            {
+                text: "Souza & Paiva Advogados agora usa o KriterIO em todas as iniciais de acidente de trabalho.",
+                author: "Dra. Fernanda Paiva",
+                role: "Sócia de Escritório"
+            },
+            {
+                text: "A clareza dos gráficos de nexo causal facilita muito a visualização da prova pericial.",
+                author: "Dr. Ricardo Almeida",
+                role: "Operador do Direito"
+            },
+            {
+                text: "Excelente para validar se vale a pena entrar com a ação de isenção de imposto de renda.",
+                author: "João Pereira",
+                role: "Aposentado"
+            },
+            {
+                text: "A integração via API permitiu conectarmos nosso CRM jurídico diretamente às calculadoras.",
+                author: "TechLaw Solutions",
+                role: "Parceiro Tecnológico"
+            },
+            {
+                text: "Os protocolos de psiquiatria forense são extremamente atualizados e fundamentados.",
+                author: "Dr. Marcos Vinícius",
+                role: "Psiquiatra Forense"
+            }
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function refreshTestimonials() {
+            const container = document.getElementById('depoimentos-container');
+            if(!container) return;
+            
+            // Shuffle and pick 2
+            const randomTwo = shuffleArray([...testimonialsData]).slice(0, 2);
+            
+            container.innerHTML = randomTwo.map(t => `
+                <div class="bg-white p-8 rounded-xl shadow-sm text-left border border-slate-100 animate-fade-in">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-600 italic mb-6">"${t.text}"</p>
+                    <div>
+                        <div class="font-bold text-slate-900 text-lg">${t.author}</div>
+                        <div class="text-sm text-slate-500 font-semibold uppercase tracking-wide">${t.role}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Init All
+        window.addEventListener('DOMContentLoaded', () => {
+            init(); // Tags
+            updateCalculator(0); // Calculator
+            refreshTestimonials(); // Testimonials
+        });
+
+    </script>
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </body>
 </html>
