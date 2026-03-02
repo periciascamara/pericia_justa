@@ -463,15 +463,10 @@
 
     <!-- NEW SECTION: Violência Contra a Mulher -->
     <section class="relative py-24 bg-slate-900 overflow-hidden">
-        <!-- INSTRUÇÃO PARA O DESENVOLVEDOR: Substitua a URL abaixo da imagem padrão pela imagem desejada para o fundo (background) desta seção (fica em overlay com o fundo escuro) -->
-       // <div class="absolute inset-0 bg-[url('./violenciamulher.jpg')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
-       // <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
-        <section class="relative py-24 bg-slate-900 overflow-hidden">
-    <!-- Imagem de fundo como elemento real -->
-    <img src="./violenciamulher.jpg" 
-         alt="Violência contra a mulher" 
-         class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay">
-    <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/90 to-transparent"></div>
+        <!-- Fundo com a imagem de teste da internet -->
+        <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: url('./violenciamulher.jpg');"></div>
+        <!-- Gradiente ajustado: transparente o suficiente para ver a imagem ao fundo -->
+        <div class="absolute inset-0 bg-slate-900/50 bg-gradient-to-r from-slate-900/95 via-slate-900/70 to-transparent"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="max-w-3xl">
